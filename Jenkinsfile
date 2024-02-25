@@ -1,11 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        MAIN_PORT = '3000'
-        DEV_PORT = '3001'
-    }
-    
     stages {
         stage('Build') {
             steps {
@@ -26,11 +20,16 @@ pipeline {
     stage('Docker build') {
         steps {
             script {
+                withCredentials([string(credentialsId: 'DOCKERHUB_PASS', variable: 'DOCKERHUB_PASS')]) {
+                    sh "docker login -u merabi14 -p ${DOCKERHUB_PASS}"
+                }
                 if (env.BRANCH_NAME == 'main') {
-                    sh 'docker build -t nodemain:v1.0 .'
+                    sh 'docker build -t merabi14/nodemain:v1.0 .'
+                    sh 'docker push merabi14/nodemain:v1.0'
                 } 
                 else if (env.BRANCH_NAME == 'dev') {
-                    sh 'docker build -t nodedev:v1.0 .'
+                    sh 'docker build -t merabi14/nodedev:v1.0 .'
+                    sh 'docker push merabi14/nodedev:v1.0'
                 }
             }
         }
