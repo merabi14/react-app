@@ -19,7 +19,7 @@ pipeline {
             }
         }
         
-        stage('Set Port and Logo') {
+        stage('Docker build') {
             steps {
                 script {
                     // Set port number based on the branch
@@ -33,12 +33,6 @@ pipeline {
                         echo "else"
                     }
                 }
-            }
-        }
-        
-        stage('Build Docker Image') {
-            steps {
-                echo "building docker file"
             }
         }
         
