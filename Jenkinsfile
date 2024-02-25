@@ -31,7 +31,7 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls'
-                    docker.build(temp:0.1 .)
+                    docker.build('temp:0.1', '.')
                 }
             }
         }
