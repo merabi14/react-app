@@ -9,37 +9,44 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Build Successful"
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                echo "test Successful"
-            }
-        }
-        
-        stage('Docker build') {
-            steps {
-                script {
-                    // Set port number based on the branch
-                    if (env.BRANCH_NAME == 'main') {
-                        PORT = MAIN_PORT
-                        echo "${PORT}"
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        PORT = DEV_PORT
-                        echo "${PORT}"
-                    } else {
-                        echo "else"
-                    }
+                dir('src'){
+                    sh 'npm install'
                 }
             }
         }
         
-        stage('Deploy') {
-            steps {
-                echo "deploy image"
+    stage('Test') {
+        steps {
+            dir('src') {
+                    sh 'npm test'
+                }
             }
         }
+
+    stage('Docker build') {
+        steps {
+            script {
+                if (env.BRANCH_NAME == 'main') {
+                    sh 'docker build -t nodemain:v1.0 .'
+                } 
+                else if (env.BRANCH_NAME == 'dev') {
+                    sh 'docker build -t nodedev:v1.0 .'
+                }
+            }
+        }
+    }   
+        
+    stage('Deploy') {
+        steps {
+            script {
+                if (env.BRANCH_NAME == 'main') {
+                    build job: 'Deploy_to_main'
+                }
+                else if (env.BRANCH_NAME == 'dev') {
+                    build job: 'Deploy_to_dev'
+                }
+            }
+        }
+    }
     }
 }
