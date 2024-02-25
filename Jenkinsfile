@@ -39,6 +39,7 @@ pipeline {
                     } else {
                         echo "else"
                     }
+                    sh 'docker build -t nodemain:v1.0 .'
                 }
             }
         }
