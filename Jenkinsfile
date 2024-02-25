@@ -13,11 +13,16 @@ pipeline {
             }
         }
         
-        stage('Test') {
-            steps {
-                echo "test Successful"
+    stage('Test') {
+        steps {
+        // Change directory to src
+            dir('src') {
+            // Run npm test command
+                    sh 'npm test'
+                }
             }
         }
+
         
         stage('Docker build') {
             steps {
