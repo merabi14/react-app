@@ -6,13 +6,6 @@ pipeline {
         DEV_PORT = '3001'
     }
     
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        
         stage('Build') {
             steps {
                 echo "Build Successful"
