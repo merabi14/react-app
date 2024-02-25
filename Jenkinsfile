@@ -31,7 +31,7 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls'
-                    sh 'docker build -t nodemain .'
+                    docker.build(temp:0.1 .)
                 }
             }
         }
