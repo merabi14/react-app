@@ -17,28 +17,35 @@ pipeline {
         
     stage('Test') {
         steps {
-        // Change directory to src
             dir('src') {
-            // Run npm test command
                     sh 'npm test'
                 }
             }
         }
 
         
-        stage('Docker build') {
-            steps {
-                script {
-                    sh 'pwd'
-                    sh 'ls'
-                    sh 'docker build -t temp .'
+    stage('Docker build') {
+        steps {
+            script {
+                if (env.BRANCH_NAME == 'main') {
+                    sh 'docker build -t nodemain:v1.0 .'
+                } 
+                else if (env.BRANCH_NAME == 'dev') {
+                    sh 'docker build -t nodedev:v1.0 .'
                 }
             }
         }
+    }   
         
-        stage('Deploy') {
-            steps {
-                echo "deploy image"
+    stage('Deploy') {
+        steps {
+            script {
+                if (env.BRANCH_NAME == 'main') {
+                    build job: 'Deploy_to_main'
+                }
+                else if (env.BRANCH_NAME == 'dev') {
+                    build job: 'Deploy_to_dev'
+                }
             }
         }
     }
