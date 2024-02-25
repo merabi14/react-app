@@ -6,6 +6,7 @@ pipeline {
         DEV_PORT = '3001'
     }
     
+    stages {
         stage('Build') {
             steps {
                 echo "Build Successful"
